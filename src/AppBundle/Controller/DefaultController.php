@@ -11,11 +11,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/addr/{addr}", name="homepage")
+     * @Route("/", name="homepage")
      */
-    public function indexAction(Request $request, $addr='rKa5xscVXpX3SWGk48o295PmBDqSvpyco9')
+    public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
+        $addr = $request->get('addr', 'rKa5xscVXpX3SWGk48o295PmBDqSvpyco9');
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
             'addr' => $addr
