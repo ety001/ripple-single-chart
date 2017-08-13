@@ -64,7 +64,7 @@
             XRPAmount.push(res[i].xrp);
             CNYAmount.push(res[i].cny);
           }
-          console.log(xtime, XRPAmount, CNYAmount);
+          // console.log(xtime, XRPAmount, CNYAmount);
           option = {
             xAxis: {
               data: xtime
@@ -79,7 +79,7 @@
               data: XRPAmount
             }]
           };
-          console.log(option);
+          // console.log(option);
           myChart.setOption(option);
         }
       }, 'json');
