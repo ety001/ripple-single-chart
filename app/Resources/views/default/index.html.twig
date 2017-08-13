@@ -4,6 +4,12 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
+        <div class="col-xs-8">
+          <input type="text" class="form-control" id="addr" value="{{ addr }}">
+        </div>
+        <div class="col-xs-4">
+          <button id="getdata" class="btn btn-primary">Get</button>
+        </div>
         <div id="main" style="width: 100%;height:400px;"></div>
       </div>
     </div>
@@ -36,32 +42,40 @@
     };
     myChart.setOption(option);
 
-    $.get('/detail/' + addr, function(res){
-      if(res) {
-        XRPAmount = [], CNYAmount = [], xtime = [];
-        // console.log(res);
-        for(var i in res) {
-          xtime.push(res[i].logtime);
-          XRPAmount.push(res[i].xrp);
-          CNYAmount.push(res[i].cny);
+    updataData(addr);
+
+    $('#getdata').click(function(){
+      updataData($('#addr').val());
+    });
+
+    function updataData(addr) {
+      $.get('/detail/' + addr, function(res){
+        if(res) {
+          XRPAmount = [], CNYAmount = [], xtime = [];
+          // console.log(res);
+          for(var i in res) {
+            xtime.push(res[i].logtime);
+            XRPAmount.push(res[i].xrp);
+            CNYAmount.push(res[i].cny);
+          }
+          option = {
+            xAxis: {
+              data: xtime
+            },
+            series: [{
+              name: 'CNY数量',
+              type: 'line',
+              data: CNYAmount
+            },{
+              name: 'XRP数量',
+              type: 'line',
+              data: XRPAmount
+            }]
+          };
+          myChart.setOption(option);
         }
-        option = {
-          xAxis: {
-            data: xtime
-          },
-          series: [{
-            name: 'CNY数量',
-            type: 'line',
-            data: CNYAmount
-          },{
-            name: 'XRP数量',
-            type: 'line',
-            data: XRPAmount
-          }]
-        };
-        myChart.setOption(option);
-      }
-    }, 'json');    
+      }, 'json');
+    }
   })
 </script>
 {% endblock %}
