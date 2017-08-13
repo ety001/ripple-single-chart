@@ -45,7 +45,7 @@ class Ripple
     /**
      * @var int
      *
-     * @ORM\Column(name="logtime", type="integer")
+     * @ORM\Column(name="logtime", type="string", length=255)
      */
     private $logtime;
 
@@ -135,7 +135,7 @@ class Ripple
     /**
      * Set logtime
      *
-     * @param integer $logtime
+     * @param string $logtime
      *
      * @return Ripple
      */
@@ -149,7 +149,7 @@ class Ripple
     /**
      * Get logtime
      *
-     * @return int
+     * @return string
      */
     public function getLogtime()
     {

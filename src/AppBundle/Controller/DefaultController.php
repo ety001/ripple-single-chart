@@ -6,6 +6,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Entity\Ripple;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DefaultController extends Controller
 {
@@ -14,9 +15,10 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $repository = $this->getDoctrine()->getRepository(Ripple::class);
-        $data = $repository->findAll();
-        var_dump($data);die();
+        // replace this example code with whatever you need
+        return $this->render('default/index.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+        ]);
     }
 
     /**
@@ -43,10 +45,25 @@ class DefaultController extends Controller
         $rippleData->setXrp($data['XRP']);
         $rippleData->setCny($data['CNY']);
         $rippleData->setPrice($data['price']);
-        $rippleData->setLogtime(time());
+        $rippleData->setLogtime(date('Y-m-d H:i:s',time()));
         $em->persist($rippleData);
         $em->flush();
-
         exit();
+    }
+
+    /**
+     * @Route("/detail", name="detail")
+     */
+    public function detailAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT r
+            FROM AppBundle:Ripple r
+            ORDER BY r.id DESC'
+        )->setFirstResult(0)
+        ->setMaxResults(24*5);
+        $data = $query->getArrayResult();
+        return new JsonResponse(array_reverse($data));
     }
 }
