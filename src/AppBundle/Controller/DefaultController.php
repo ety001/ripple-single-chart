@@ -52,7 +52,7 @@ class DefaultController extends Controller
         $rippleData->setLogtime(date('Y-m-d H:i:s',time()));
         $em->persist($rippleData);
         $em->flush();
-        exit();
+        return new JsonResponse(array_reverse([]));
     }
 
     /**
