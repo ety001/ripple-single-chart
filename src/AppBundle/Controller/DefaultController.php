@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/{addr}", name="homepage")
+     * @Route("/addr/{addr}", name="homepage")
      */
     public function indexAction(Request $request, $addr='rKa5xscVXpX3SWGk48o295PmBDqSvpyco9')
     {
