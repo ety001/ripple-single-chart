@@ -30,14 +30,20 @@
         text: 'Ripple Personal Charts',
         subtext: addr
       },
-      tooltip: {},
+      tooltip: {
+        trigger: 'axis'
+      },
       legend: {
         data:['CNY数量', 'XRP数量']
       },
       xAxis: {
+        type: 'category',
+        boundaryGap: false,
         data: []
       },
-      yAxis: {},
+      yAxis: {
+        type: 'value'
+      },
       series: []
     };
     myChart.setOption(option);
@@ -58,6 +64,7 @@
             XRPAmount.push(res[i].xrp);
             CNYAmount.push(res[i].cny);
           }
+          console.log(xtime, XRPAmount, CNYAmount);
           option = {
             xAxis: {
               data: xtime
@@ -72,6 +79,7 @@
               data: XRPAmount
             }]
           };
+          console.log(option);
           myChart.setOption(option);
         }
       }, 'json');
