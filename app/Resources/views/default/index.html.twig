@@ -16,11 +16,13 @@
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
     var XRPAmount = [], CNYAmount = [], xtime = [];
+    var addr = '{{ addr }}';
 
     // 指定图表的配置项和数据
     var option = {
       title: {
-        text: 'Ripple Personal Charts'
+        text: 'Ripple Personal Charts',
+        subtext: addr
       },
       tooltip: {},
       legend: {
@@ -32,39 +34,31 @@
       yAxis: {},
       series: []
     };
-
-    $.get('/detail', function(res){
-      console.log(res);
-      for(var i in res) {
-
-      }
-    }, 'json');
-    
-    // var option = {
-    //   title: {
-    //     text: 'Ripple Personal Charts'
-    //   },
-    //   tooltip: {},
-    //   legend: {
-    //     data:['CNY数量', 'XRP数量']
-    //   },
-    //   xAxis: {
-    //     data: []
-    //   },
-    //   yAxis: {},
-    //   series: [{
-    //     name: 'CNY数量',
-    //     type: 'line',
-    //     data: [5, 20, 36, 10, 10, 20]
-    //   },{
-    //     name: 'XRP数量',
-    //     type: 'line',
-    //     data: [52, 201, 10, 10, 10, 20]
-    //   }]
-    // };
-
-    // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+
+    $.get('/detail/' + addr, function(res){
+      // console.log(res);
+      for(var i in res) {
+        xtime.push(res[i].logtime);
+        XRPAmount.push(res[i].xrp);
+        CNYAmount.push(res[i].cny);
+        option = {
+          xAxis: {
+            data: xtime
+          },
+          series: [{
+            name: 'CNY数量',
+            type: 'line',
+            data: CNYAmount
+          },{
+            name: 'XRP数量',
+            type: 'line',
+            data: XRPAmount
+          }]
+        };
+        myChart.setOption(option);
+      }
+    }, 'json');    
   })
 </script>
 {% endblock %}

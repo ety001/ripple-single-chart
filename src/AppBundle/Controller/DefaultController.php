@@ -11,22 +11,24 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/", name="homepage")
+     * @Route("/{addr}", name="homepage")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, $addr='rKa5xscVXpX3SWGk48o295PmBDqSvpyco9')
     {
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.project_dir')).DIRECTORY_SEPARATOR,
+            'addr' => $addr
         ]);
     }
 
     /**
-     * @Route("/getdata", name="getdata")
+     * @Route("/getdata/{addr}/{gateway}", name="getdata")
      */
-    public function datagetAction(Request $request)
+    public function datagetAction(Request $request, $addr='rKa5xscVXpX3SWGk48o295PmBDqSvpyco9', $gateway='rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y')
     {
-        $balances = file_get_contents('https://data.ripple.com/v2/accounts/rKa5xscVXpX3SWGk48o295PmBDqSvpyco9/balances');
+        $balances = file_get_contents('https://data.ripple.com/v2/accounts/'.$addr.'/balances');
+        // var_dump($balances);die();
         $result = json_decode($balances, true);
         $data = [];
         foreach ($result['balances'] as $key => $val) {
@@ -36,12 +38,14 @@ class DefaultController extends Controller
                 $data['CNY'] = $val['value'];
             }
         }
-        $price = file_get_contents('https://data.ripple.com/v2/exchange_rates/CNY+rKiCet8SdvWxPXnAgYarFUXMh1zCPz432Y/XRP');
+        $price = file_get_contents('https://data.ripple.com/v2/exchange_rates/CNY+'.$gateway.'/XRP');
         $result = json_decode($price, true);
+        // var_dump($result);die();
         $data['price'] = round(1 / $result['rate'], 6);
 
         $em = $this->getDoctrine()->getManager();
         $rippleData = new Ripple();
+        $rippleData->setAddr($addr);
         $rippleData->setXrp($data['XRP']);
         $rippleData->setCny($data['CNY']);
         $rippleData->setPrice($data['price']);
@@ -52,16 +56,18 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/detail", name="detail")
+     * @Route("/detail/{addr}", name="detail")
      */
-    public function detailAction(Request $request)
+    public function detailAction(Request $request, $addr='rKa5xscVXpX3SWGk48o295PmBDqSvpyco9')
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
             'SELECT r
             FROM AppBundle:Ripple r
+            WHERE r.addr = :addr
             ORDER BY r.id DESC'
-        )->setFirstResult(0)
+        )->setParameter('addr', $addr)
+        ->setFirstResult(0)
         ->setMaxResults(24*5);
         $data = $query->getArrayResult();
         return new JsonResponse(array_reverse($data));

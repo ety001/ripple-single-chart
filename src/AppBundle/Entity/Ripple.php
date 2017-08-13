@@ -24,6 +24,13 @@ class Ripple
     /**
      * @var string
      *
+     * @ORM\Column(name="address", type="string", length=255)
+     */
+    private $addr;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="xrp", type="string", length=255)
      */
     private $xrp;
@@ -49,15 +56,38 @@ class Ripple
      */
     private $logtime;
 
-
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set addr
+     *
+     * @param string $addr
+     *
+     * @return Ripple
+     */
+    public function setAddr($addr)
+    {
+        $this->addr = $addr;
+
+        return $this;
+    }
+
+    /**
+     * Get addr
+     *
+     * @return string
+     */
+    public function getAddr()
+    {
+        return $this->addr;
     }
 
     /**
@@ -156,4 +186,3 @@ class Ripple
         return $this->logtime;
     }
 }
-
