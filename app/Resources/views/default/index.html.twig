@@ -37,11 +37,14 @@
     myChart.setOption(option);
 
     $.get('/detail/' + addr, function(res){
-      // console.log(res);
-      for(var i in res) {
-        xtime.push(res[i].logtime);
-        XRPAmount.push(res[i].xrp);
-        CNYAmount.push(res[i].cny);
+      if(res) {
+        XRPAmount = [], CNYAmount = [], xtime = [];
+        // console.log(res);
+        for(var i in res) {
+          xtime.push(res[i].logtime);
+          XRPAmount.push(res[i].xrp);
+          CNYAmount.push(res[i].cny);
+        }
         option = {
           xAxis: {
             data: xtime
