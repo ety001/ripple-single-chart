@@ -23,7 +23,7 @@
   $(function(){
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
-    var XRPAmount = [], CNYAmount = [], xtime = [];
+    var XRPAmount = [], CNYAmount = [], xtime = [], price = [], XRPValue = [], CNYValue = [];
     var addr = '{{ addr }}';
 
     // 指定图表的配置项和数据
@@ -36,7 +36,7 @@
         trigger: 'axis'
       },
       legend: {
-        data:['CNY数量', 'XRP数量']
+        data:['CNY数量', 'XRP数量', '价格', 'XRP价值', 'CNY价值']
       },
       xAxis: {
         type: 'category',
@@ -59,12 +59,15 @@
     function updataData(addr) {
       $.get('/detail/' + addr, function(res){
         if(res) {
-          XRPAmount = [], CNYAmount = [], xtime = [];
+          XRPAmount = [], CNYAmount = [], xtime = [], price = [], XRPValue = [], CNYValue = [];
           // console.log(res);
           for(var i in res) {
             xtime.push(res[i].logtime);
             XRPAmount.push(res[i].xrp);
             CNYAmount.push(res[i].cny);
+            price.push(res[i].price);
+            XRPValue.push(res[i].cny / res[i].price + res[i].xrp);
+            CNYValue.push(res[i].xrp * res[i].price + res[i].cny);
           }
           // console.log(xtime, XRPAmount, CNYAmount);
           option = {
@@ -79,6 +82,18 @@
               name: 'XRP数量',
               type: 'line',
               data: XRPAmount
+            },{
+              name: '价格',
+              type: 'line',
+              data: price
+            },{
+              name: 'XRP价值',
+              type: 'line',
+              data: XRPValue
+            },{
+              name: 'CNY价值',
+              type: 'line',
+              data: CNYValue
             }]
           };
           // console.log(option);
