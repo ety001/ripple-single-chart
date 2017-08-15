@@ -1,19 +1,21 @@
 ripple-charts
 =============
 
-## 环境搭建
+### 环境搭建
 
 1. git clone https://github.com/ety001/ripple-single-chart.git
 2. cd ripple-single-chart
 3. composer update
 4. php bin/console doctrine:database:create
 5. php bin/console doctrine:schema:update --force
+6. php bin/console server:start
+7. php bin/console server:stop
 
-## 数据库结构
+### 数据库结构
 
 /src/AppBundle/Entity/Ripple.php
 
-## 接口
+### 接口
 
 /getdata/{addr}/{gateway}
 
