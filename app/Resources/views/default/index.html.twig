@@ -33,7 +33,10 @@
         subtext: addr
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross'
+        }
       },
       legend: {
         data:['CNY数量', 'XRP数量', '价格', 'XRP价值', 'CNY价值']
@@ -43,9 +46,18 @@
         boundaryGap: false,
         data: []
       },
-      yAxis: {
-        type: 'value'
-      },
+      yAxis: [
+        {
+          type: 'value',
+          name: '数量',
+          position: 'left'
+        },
+        {
+          type: 'value',
+          name: '价格',
+          position: 'right'
+        }
+      ],
       series: []
     };
     myChart.setOption(option);
@@ -63,43 +75,55 @@
           // console.log(res);
           for(var i in res) {
             xtime.push(res[i].logtime);
-            XRPAmount.push(res[i].xrp);
-            CNYAmount.push(res[i].cny);
-            price.push(res[i].price);
-            XRPValue.push(res[i].cny / res[i].price + res[i].xrp);
-            CNYValue.push(res[i].xrp * res[i].price + res[i].cny);
+            XRPAmount.push(parseNum(res[i].xrp, 4));
+            CNYAmount.push(parseNum(res[i].cny, 4));
+            price.push(parseNum(res[i].price, 4));
+            XRPValue.push(parseNum( parseFloat(res[i].cny) / parseFloat(res[i].price) + parseFloat(res[i].xrp), 4 ));
+            CNYValue.push(parseNum( parseFloat(res[i].xrp) * parseFloat(res[i].price) + parseFloat(res[i].cny), 4 ));
           }
           // console.log(xtime, XRPAmount, CNYAmount);
           option = {
             xAxis: {
               data: xtime
             },
-            series: [{
-              name: 'CNY数量',
-              type: 'line',
-              data: CNYAmount
-            },{
-              name: 'XRP数量',
-              type: 'line',
-              data: XRPAmount
-            },{
-              name: '价格',
-              type: 'line',
-              data: price
-            },{
-              name: 'XRP价值',
-              type: 'line',
-              data: XRPValue
-            },{
-              name: 'CNY价值',
-              type: 'line',
-              data: CNYValue
-            }]
+            series: 
+            [
+              {
+                name: 'CNY数量',
+                type: 'line',
+                data: CNYAmount,
+                yAxisIndex: 0
+              },{
+                name: 'XRP数量',
+                type: 'line',
+                data: XRPAmount,
+                yAxisIndex: 0
+              },{
+                name: '价格',
+                type: 'line',
+                data: price,
+                yAxisIndex: 1
+              },{
+                name: 'XRP价值',
+                type: 'line',
+                data: XRPValue,
+                yAxisIndex: 0
+              },{
+                name: 'CNY价值',
+                type: 'line',
+                data: CNYValue,
+                yAxisIndex: 0
+              }
+            ]
           };
           // console.log(option);
           myChart.setOption(option);
         }
       }, 'json');
+    }
+
+    function parseNum(num, i) {
+      return Number(num).toFixed(i);
     }
   })
 </script>
